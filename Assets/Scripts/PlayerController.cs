@@ -5,46 +5,32 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private float moveSpeed = 2.5f;
-    private float rotationSpeed = 60f;
+    private string fireButton = "Fire1";
+    [SerializeField]
+    private string xAxisName = "Horizontal";
+    [SerializeField]
+    private string yAxisName = "Vertical";
 
-    private Rigidbody rb;
-    private Vector2 movementAxis;
+    private ProjectileController projectileController;
+    private TankController tankController;
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        projectileController = GetComponent<ProjectileController>();
+        tankController = GetComponent<TankController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateMovementAxis();
-    }
-    void FixedUpdate()
-    {
-        UpdatePosition();
-        UpdateRotation();
-    }
-    void UpdateMovementAxis()
-    {
-        movementAxis.x = Input.GetAxis("Horizontal");
-        movementAxis.y = Input.GetAxis("Vertical");
-    }
-    void UpdatePosition()
-    {
-        var movementPosition = transform.forward * (movementAxis.y * moveSpeed * Time.deltaTime);
-        var currentPosition = rb.position;
-        var newPosition = currentPosition + movementPosition;
-        rb.MovePosition(newPosition);
-    }
-    void UpdateRotation()
-    {
-        var rotationMovement = movementAxis.x * rotationSpeed * Time.deltaTime;
-        var currentRotation = rb.rotation.eulerAngles;
-        currentRotation.y += rotationMovement;
-
-        var newRotation = Quaternion.Euler(currentRotation);
-        rb.MoveRotation(newRotation);
+        if (Input.GetButtonDown(fireButton))
+        {
+            projectileController.Fire();
+        }
+        tankController.Move(new Vector2
+        {
+            x = Input.GetAxis(xAxisName),
+            y = Input.GetAxis(yAxisName),
+        });
     }
 }

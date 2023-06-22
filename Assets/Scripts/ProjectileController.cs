@@ -32,8 +32,10 @@ public class ProjectileController : MonoBehaviour
     public void UpdateAmmo(int value) => hasAmmo = value > 0;
     private bool IsFire() => hasAmmo && Input.GetButtonDown("Fire1");
 
-    private void Fire()
+    public void Fire()
     {
+        if (!hasAmmo)
+            return;
         CreateProjectile();
         CreateMuzzleEffect();
         onFire.Invoke();
